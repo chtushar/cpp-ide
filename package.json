@@ -9,8 +9,10 @@
     "@testing-library/user-event": "^7.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-icons": "^3.11.0",
     "react-scripts": "3.4.3",
-    "socket.io-client": "^2.3.0"
+    "socket.io-client": "^2.3.0",
+    "styled-components": "^5.2.0"
   },
   "scripts": {
     "dev": "concurrently \"yarn start-client\" \"cd server && yarn dev\"",

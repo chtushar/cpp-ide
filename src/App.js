@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import './App.css';
 import io from 'socket.io-client';
-import Editor from '@monaco-editor/react';
+import EditorWrapper from './components/Editor/EditorWrapper';
+import Layout from './components/Layout/Layout';
+import './App.css';
 
 function App() {
   const socket = io.connect('http://localhost:5555');
-  const [theme, setTheme] = useState('dark');
+  const [editorTheme, setEditorTheme] = useState('dark');
   return (
     <div className="App">
-      <Editor height="90vh" language="cpp" theme={theme} />
+      <Layout editorTheme={editorTheme} setEditorTheme={setEditorTheme} />
     </div>
   );
 }
