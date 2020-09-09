@@ -15,6 +15,7 @@ const EditorWrapper = ({ editorTheme, setEditorTheme }) => {
     <EditorWrapperWrapper>
       <EditorHeader setEditorTheme={setEditorTheme} />
       <Editor
+        height="100%"
         width="100%"
         language="cpp"
         value={languageDefault['cpp']}
