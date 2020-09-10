@@ -24,6 +24,7 @@ const RunButton = styled.button`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 
   span {
     margin-right: 8px;
