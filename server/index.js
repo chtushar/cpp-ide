@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 5555;
 
 app.use(express.static(path.join(__dirname, '..', 'build')));
 
-//console.log(CPP(sampleProgram, '5'));
+console.log(CPP(sampleProgram, '5'));
 
 let server = app.listen(PORT, () => {
   console.log(`Listening at port ${PORT}`);
