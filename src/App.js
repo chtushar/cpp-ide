@@ -4,10 +4,15 @@ import Layout from './components/Layout/Layout';
 import './App.css';
 
 function App() {
-  const socket = io.connect(process.env.URL || 'http://localhost:5555');
+  let URL =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:5555'
+      : 'https://ide-tush.herokuapp.com';
+  const socket = io.connect(URL);
   useEffect(() => {
-    console.log(process.env.URL);
-  }, []);
+    console.log(URL);
+  }, [URL]);
+
   const [editorTheme, setEditorTheme] = useState('dark');
   return (
     <div className="App">
