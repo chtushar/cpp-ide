@@ -10,33 +10,33 @@ const {
   deleteFiles,
 } = require('../Utils/utils');
 
-function compileProgram(fileName, exePath, send) {
+function compileProgram(cppPath, exePath) {
   return new Promise((resolve, reject) => {
     console.log('Compiling...✅');
-    exec(`g++ -o ${exePath} ${fileName}`, (error, stdout, stderr) => {
+    exec(`g++ -o ${exePath} ${cppPath}`, (error, stdout, stderr) => {
       if (error) {
-        reject(send);
+        reject({ error, stdout, stderr });
       } else {
         console.log(chalk.bgGreen.bold(`Compiled Successfully! 🐣`));
-        resolve(send);
+        resolve({ stdout, stderr });
       }
     });
   });
 }
 
-function runProgram(executable, input, send) {
-  return new Promise((resolve, reject) => {
-    console.log('Running...💯');
-    exec(getRunCommand(executable, input), (error, stdout, stderr) => {
-      if (error) {
-        reject(send);
-      } else {
-        console.log(chalk.bgGreen.bold('Run Successful! 🦄') + '\nstdout: ');
-        resolve(stdout);
-      }
-    });
-  });
-}
+// function runProgram(executable, input, send) {
+//   return new Promise((resolve, reject) => {
+//     console.log('Running...💯');
+//     exec(getRunCommand(executable, input), (error, stdout, stderr) => {
+//       if (error) {
+//         reject(send);
+//       } else {
+//         console.log(chalk.bgGreen.bold('Run Successful! 🦄') + '\nstdout: ');
+//         resolve(stdout);
+//       }
+//     });
+//   });
+// }
 
 async function CPP(code, input, socket) {
   let send = {
@@ -52,27 +52,18 @@ async function CPP(code, input, socket) {
   await saveFile(inputPath, input); //Save input file
 
   //Compile CPP file
-  await compileProgram(cppPath, exePath, send)
-    .then(async () => {
-      let com;
-      try {
-        com = await runProgram(exePath, inputPath);
-        send.stdout = com;
-      } catch (err) {
-        send.stderr = err;
-        Error(err);
-      }
-    })
-    .then((d) => {
-      deleteFiles(cppPath, inputPath, exePath);
-      return d;
-    })
-    .catch((err) => {
-      deleteFiles(cppPath, inputPath, exePath);
-      send.stderr = err;
-      return err; //Compile fail //run error
-    });
+  try {
+    await compileProgram(cppPath, exePath);
+  } catch (err) {
+    console.log(chalk.bgRed.bold('Compilation Error!'));
+    send.stderr = err.stderr;
+    deleteFiles(cppPath, inputPath, exePath);
+    return send;
+  }
 
+  //Run CPP File
+
+  deleteFiles(cppPath, inputPath, exePath);
   return send;
 }
 
