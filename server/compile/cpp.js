@@ -24,19 +24,19 @@ function compileProgram(cppPath, exePath) {
   });
 }
 
-// function runProgram(executable, input, send) {
-//   return new Promise((resolve, reject) => {
-//     console.log('Running...💯');
-//     exec(getRunCommand(executable, input), (error, stdout, stderr) => {
-//       if (error) {
-//         reject(send);
-//       } else {
-//         console.log(chalk.bgGreen.bold('Run Successful! 🦄') + '\nstdout: ');
-//         resolve(stdout);
-//       }
-//     });
-//   });
-// }
+function runProgram(exePath, inputPath) {
+  return new Promise((resolve, reject) => {
+    console.log('Running...💯');
+    exec(getRunCommand(exePath, inputPath), (error, stdout, stderr) => {
+      if (error) {
+        reject({ error, stdout, stderr });
+      } else {
+        console.log(chalk.bgGreen.bold('Run Successful! 🦄'));
+        resolve({ stdout, stderr });
+      }
+    });
+  });
+}
 
 async function CPP(code, input, socket) {
   let send = {
@@ -62,6 +62,20 @@ async function CPP(code, input, socket) {
   }
 
   //Run CPP File
+
+  try {
+    let { stdout, stderr } = await runProgram(exePath, inputPath);
+    send.stdout = stdout;
+    send.stderr = stderr;
+  } catch (err) {
+    console.log(chalk.bgRed.bold('Run Error!'));
+    send.stderr = err.stderr;
+    deleteFiles(cppPath, inputPath, exePath);
+  }
+
+  if (send.stderr === '') {
+    send.stderr = null;
+  }
 
   deleteFiles(cppPath, inputPath, exePath);
   return send;
