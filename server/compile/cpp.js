@@ -10,26 +10,26 @@ const {
   deleteFiles,
 } = require('../Utils/utils');
 
-function compileProgram(fileName, exePath) {
+function compileProgram(fileName, exePath, send) {
   return new Promise((resolve, reject) => {
     console.log('Compiling...✅');
     exec(`g++ -o ${exePath} ${fileName}`, (error, stdout, stderr) => {
       if (error) {
-        reject(Error(error));
+        reject(send);
       } else {
         console.log(chalk.bgGreen.bold(`Compiled Successfully! 🐣`));
-        resolve();
+        resolve(send);
       }
     });
   });
 }
 
-function runProgram(executable, input) {
+function runProgram(executable, input, send) {
   return new Promise((resolve, reject) => {
     console.log('Running...💯');
     exec(getRunCommand(executable, input), (error, stdout, stderr) => {
       if (error) {
-        reject(error);
+        reject(send);
       } else {
         console.log(chalk.bgGreen.bold('Run Successful! 🦄') + '\nstdout: ');
         resolve(stdout);
@@ -39,6 +39,10 @@ function runProgram(executable, input) {
 }
 
 async function CPP(code, input, socket) {
+  let send = {
+    stdout: null,
+    stderr: null,
+  };
   let fileName = uuid();
   let exePath = getExecutablePath(fileName);
   let cppPath = getCPPPath(fileName);
@@ -48,15 +52,16 @@ async function CPP(code, input, socket) {
   await saveFile(inputPath, input); //Save input file
 
   //Compile CPP file
-  return await compileProgram(cppPath, exePath)
+  await compileProgram(cppPath, exePath, send)
     .then(async () => {
       let com;
       try {
         com = await runProgram(exePath, inputPath);
+        send.stdout = com;
       } catch (err) {
+        send.stderr = err;
         Error(err);
       }
-      return com;
     })
     .then((d) => {
       deleteFiles(cppPath, inputPath, exePath);
@@ -64,8 +69,11 @@ async function CPP(code, input, socket) {
     })
     .catch((err) => {
       deleteFiles(cppPath, inputPath, exePath);
+      send.stderr = err;
       return err; //Compile fail //run error
     });
+
+  return send;
 }
 
 module.exports = { CPP };
