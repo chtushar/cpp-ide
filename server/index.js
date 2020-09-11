@@ -18,6 +18,18 @@ let server = app.listen(PORT, () => {
 
 const io = socket(server);
 
+// let sampleCode = `#include <iostream>
+// using namespace std;
+// int main() {
+//     cout<<"Hello World!";
+// }`;
+
+// async function ans() {
+//   console.log(await CPP(sampleCode, ''));
+// }
+
+// ans();
+
 io.on('connection', (socket) => {
   console.log(`${socket.id} made an connection!`);
   socket.on('run', async ({ code, input }) => {

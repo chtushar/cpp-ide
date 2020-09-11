@@ -39,6 +39,10 @@ const Layout = ({ socket }) => {
     setOutputValue(ans);
   });
 
+  socket.on('error', ({ error }) => {
+    setOutputValue(error);
+  });
+
   return (
     <LayoutWrapper>
       <EditorWrapper

@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -16,6 +17,19 @@ const saveFile = (file, data) => {
     });
   });
 };
+
+function deleteFiles(cppPath, inputPath, exePath) {
+  console.log(chalk.bgBlueBright.bold('Cpp file deleted successfully!'));
+  fs.unlinkSync(cppPath);
+  console.log(chalk.bgBlueBright.bold('Input file deleted successfully!'));
+  fs.unlinkSync(inputPath);
+  if (fs.existsSync(exePath)) {
+    console.log(
+      chalk.bgBlueBright.bold('Executable file deleted successfully!'),
+    );
+    fs.unlinkSync(exePath);
+  }
+}
 
 function getRunCommand(executable, input) {
   return `${executable} < ${input}`;
@@ -44,4 +58,5 @@ module.exports = {
   getExecutablePath,
   getCPPPath,
   getInputPath,
+  deleteFiles,
 };

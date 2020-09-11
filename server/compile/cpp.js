@@ -1,14 +1,13 @@
 const { v4: uuid } = require('uuid');
 const chalk = require('chalk');
-const { exec, execFile } = require('child_process');
-const fs = require('fs');
-const os = require('os');
+const { exec } = require('child_process');
 const {
   saveFile,
   getRunCommand,
   getExecutablePath,
   getCPPPath,
   getInputPath,
+  deleteFiles,
 } = require('../Utils/utils');
 
 function compileProgram(fileName, exePath) {
@@ -16,7 +15,7 @@ function compileProgram(fileName, exePath) {
     console.log('Compiling...✅');
     exec(`g++ -o ${exePath} ${fileName}`, (error, stdout, stderr) => {
       if (error) {
-        reject(error);
+        reject(Error(error));
       } else {
         console.log(chalk.bgGreen.bold(`Compiled Successfully! 🐣`));
         resolve();
@@ -33,7 +32,6 @@ function runProgram(executable, input) {
         reject(error);
       } else {
         console.log(chalk.bgGreen.bold('Run Successful! 🦄') + '\nstdout: ');
-        console.log(stdout);
         resolve(stdout);
       }
     });
@@ -41,36 +39,32 @@ function runProgram(executable, input) {
 }
 
 async function CPP(code, input, socket) {
-  let ans;
-
   let fileName = uuid();
   let exePath = getExecutablePath(fileName);
   let cppPath = getCPPPath(fileName);
   let inputPath = getInputPath(fileName);
 
-  return await saveFile(cppPath, code)
-    .then(saveFile(inputPath, input))
-    .then(async () => {
-      await compileProgram(cppPath, exePath);
-    })
-    .then(async () => {
-      ans = await runProgram(exePath, inputPath);
-      return ans;
-    })
-    .then((ans) => {
-      console.log(chalk.bgBlueBright.bold('Cpp file deleted successfully!'));
-      fs.unlinkSync(cppPath);
-      console.log(chalk.bgBlueBright.bold('Input file deleted successfully!'));
-      fs.unlinkSync(inputPath);
-      console.log(
-        chalk.bgBlueBright.bold('Executable file deleted successfully!'),
-      );
-      fs.unlinkSync(exePath);
+  await saveFile(cppPath, code); //save CPP fiḻe
+  await saveFile(inputPath, input); //Save input file
 
-      return ans;
+  //Compile CPP file
+  return await compileProgram(cppPath, exePath)
+    .then(async () => {
+      let com;
+      try {
+        com = await runProgram(exePath, inputPath);
+      } catch (err) {
+        Error(err);
+      }
+      return com;
+    })
+    .then((d) => {
+      deleteFiles(cppPath, inputPath, exePath);
+      return d;
     })
     .catch((err) => {
-      console.log(err);
+      deleteFiles(cppPath, inputPath, exePath);
+      return err; //Compile fail //run error
     });
 }
 
