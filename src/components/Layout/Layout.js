@@ -35,6 +35,7 @@ const Layout = ({ socket }) => {
   }
 
   socket.on('ans', ({ ans }) => {
+    console.log(ans);
     setOutputValue(ans);
   });
 
