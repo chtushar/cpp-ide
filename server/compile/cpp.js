@@ -1,3 +1,4 @@
+const { v4: uuid } = require('uuid');
 const chalk = require('chalk');
 const { exec, execFile } = require('child_process');
 const fs = require('fs');
@@ -39,25 +40,24 @@ function runProgram(executable, input) {
   });
 }
 
-async function CPP(code, input) {
-  let message = {
-    data: null,
-  };
+async function CPP(code, input, socket) {
+  let ans;
 
-  let fileName = 'tushar';
+  let fileName = uuid();
   let exePath = getExecutablePath(fileName);
   let cppPath = getCPPPath(fileName);
   let inputPath = getInputPath(fileName);
 
-  await saveFile(cppPath, code)
+  return await saveFile(cppPath, code)
     .then(saveFile(inputPath, input))
     .then(async () => {
       await compileProgram(cppPath, exePath);
     })
     .then(async () => {
-      await runProgram(exePath, inputPath);
+      ans = await runProgram(exePath, inputPath);
+      return ans;
     })
-    .then((p) => {
+    .then((ans) => {
       console.log(chalk.bgBlueBright.bold('Cpp file deleted successfully!'));
       fs.unlinkSync(cppPath);
       console.log(chalk.bgBlueBright.bold('Input file deleted successfully!'));
@@ -66,12 +66,12 @@ async function CPP(code, input) {
         chalk.bgBlueBright.bold('Executable file deleted successfully!'),
       );
       fs.unlinkSync(exePath);
+
+      return ans;
     })
     .catch((err) => {
       console.log(err);
     });
-
-  return message;
 }
 
 module.exports = { CPP };

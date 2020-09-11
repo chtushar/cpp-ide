@@ -15,11 +15,11 @@ const OutputAreaText = styled.textarea`
   outline: none;
 `;
 
-const OutputArea = () => {
+const OutputArea = ({ outputValue }) => {
   return (
     <OutputAreaWrapper>
       <IOHeader message="Output" />
-      <OutputAreaText disabled />
+      <OutputAreaText disabled value={outputValue} />
     </OutputAreaWrapper>
   );
 };

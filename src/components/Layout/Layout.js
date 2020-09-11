@@ -24,12 +24,19 @@ const Layout = ({ socket }) => {
   const [editorTheme, setEditorTheme] = useState('dark');
   const [code, setCode] = useState(languageDefault['cpp']);
   const [inputValue, setInputValue] = useState('');
+  const [outputValue, setOutputValue] = useState('');
 
   function handleRun(_code) {
     setCode(_code);
-    console.log(_code);
-    console.log(inputValue);
+    socket.emit('run', {
+      code: _code,
+      input: inputValue,
+    });
   }
+
+  socket.on('ans', ({ ans }) => {
+    setOutputValue(ans);
+  });
 
   return (
     <LayoutWrapper>
@@ -42,7 +49,7 @@ const Layout = ({ socket }) => {
       />
       <IOWrapper>
         <InputArea inputValue={inputValue} setInputValue={setInputValue} />
-        <OutputArea />
+        <OutputArea outputValue={outputValue} />
       </IOWrapper>
     </LayoutWrapper>
   );
