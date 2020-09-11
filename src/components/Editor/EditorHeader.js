@@ -46,7 +46,7 @@ const SelectTheme = styled.select`
   }
 `;
 
-const EditorHeader = ({ setEditorTheme }) => {
+const EditorHeader = ({ setEditorTheme, handleClick }) => {
   const select_theme = useRef(null);
 
   return (
@@ -58,7 +58,7 @@ const EditorHeader = ({ setEditorTheme }) => {
         <option value="dark">Dark</option>
         <option value="light">Light</option>
       </SelectTheme>
-      <RunButton>
+      <RunButton onClick={handleClick}>
         <span>Run</span>
         <IoIosPlay />
       </RunButton>

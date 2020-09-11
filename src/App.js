@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import io from 'socket.io-client';
 import Layout from './components/Layout/Layout';
 import './App.css';
@@ -13,10 +13,9 @@ function App() {
     console.log(URL);
   }, [URL]);
 
-  const [editorTheme, setEditorTheme] = useState('dark');
   return (
     <div className="App">
-      <Layout editorTheme={editorTheme} setEditorTheme={setEditorTheme} />
+      <Layout socket={socket} />
     </div>
   );
 }

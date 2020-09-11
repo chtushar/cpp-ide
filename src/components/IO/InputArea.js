@@ -15,11 +15,15 @@ const InputAreaText = styled.textarea`
   outline: none;
 `;
 
-const InputArea = () => {
+const InputArea = ({ inputValue, setInputValue }) => {
+  function handleInput(e) {
+    setInputValue(e.target.value);
+  }
+
   return (
     <InputAreaWrapper>
       <IOHeader message="Input" />
-      <InputAreaText />
+      <InputAreaText onChange={handleInput} value={inputValue} />
     </InputAreaWrapper>
   );
 };
