@@ -20,7 +20,7 @@ const IOWrapper = styled.div`
   justify-content: flex-start;
 `;
 
-const Layout = ({ socket }) => {
+const Layout = () => {
   const [editorTheme, setEditorTheme] = useState('dark');
   const [code, setCode] = useState(languageDefault['cpp']);
   const [inputValue, setInputValue] = useState('');
@@ -28,20 +28,9 @@ const Layout = ({ socket }) => {
 
   function handleRun(_code) {
     setCode(_code);
-    socket.emit('run', {
-      code: _code,
-      input: inputValue,
-    });
+    console.log(_code);
+    console.log(inputValue);
   }
-
-  socket.on('ans', ({ ans }) => {
-    console.log(ans);
-    setOutputValue(ans);
-  });
-
-  socket.on('error', ({ error }) => {
-    setOutputValue(error);
-  });
 
   return (
     <LayoutWrapper>
