@@ -19,10 +19,16 @@ const saveFile = (file, data) => {
 };
 
 function deleteFiles(cppPath, inputPath, exePath) {
-  console.log(chalk.bgBlueBright.bold('Cpp file deleted successfully!'));
-  fs.unlinkSync(cppPath);
-  console.log(chalk.bgBlueBright.bold('Input file deleted successfully!'));
-  fs.unlinkSync(inputPath);
+  if (fs.existsSync(cppPath)) {
+    console.log(chalk.bgBlueBright.bold('Cpp file deleted successfully!'));
+    fs.unlinkSync(cppPath);
+  }
+
+  if (fs.existsSync(inputPath)) {
+    console.log(chalk.bgBlueBright.bold('Input file deleted successfully!'));
+    fs.unlinkSync(inputPath);
+  }
+
   if (fs.existsSync(exePath)) {
     console.log(
       chalk.bgBlueBright.bold('Executable file deleted successfully!'),
