@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import { languageDefault } from '../../content/defaultValues';
 import EditorWrapper from '../Editor/EditorWrapper';
@@ -20,16 +21,29 @@ const IOWrapper = styled.div`
   justify-content: flex-start;
 `;
 
-const Layout = () => {
+const Layout = ({ URL }) => {
   const [editorTheme, setEditorTheme] = useState('dark');
   const [code, setCode] = useState(languageDefault['cpp']);
   const [inputValue, setInputValue] = useState('');
   const [outputValue, setOutputValue] = useState('');
 
-  function handleRun(_code) {
+  async function handleRun(_code) {
     setCode(_code);
-    console.log(_code);
-    console.log(inputValue);
+    await axios
+      .post(`${URL}/api/`, {
+        code: _code,
+        input: inputValue,
+      })
+      .then(({ data }) => {
+        if (data.stderr) {
+          setOutputValue(data.stderr);
+          return;
+        }
+        setOutputValue(data.stdout);
+      })
+      .catch((err) => {
+        setOutputValue('There is a server issue!');
+      });
   }
 
   return (

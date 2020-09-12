@@ -13,6 +13,7 @@ const OutputAreaText = styled.textarea`
   flex-grow: 1;
   width: 100%;
   outline: none;
+  overflow-y: scroll;
 `;
 
 const OutputArea = ({ outputValue }) => {
