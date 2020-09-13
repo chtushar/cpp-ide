@@ -1,3 +1,1 @@
-# Online C++ IDE for Competitive Programmers
-
-This is under progess!
+# Online C++ IDE for Competitive Coders
