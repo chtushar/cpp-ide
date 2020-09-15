@@ -6,6 +6,9 @@ import Editor from '@monaco-editor/react';
 const EditorWrapperWrapper = styled.div`
   width: 60%;
   height: 100%;
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 const EditorWrapper = ({ editorTheme, setEditorTheme, code, handleRun }) => {

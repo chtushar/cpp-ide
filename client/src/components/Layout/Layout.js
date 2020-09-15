@@ -11,6 +11,10 @@ const LayoutWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: row;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 
 const IOWrapper = styled.div`
@@ -19,6 +23,9 @@ const IOWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 const Layout = ({ URL }) => {
