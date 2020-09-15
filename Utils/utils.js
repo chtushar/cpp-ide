@@ -42,6 +42,7 @@ function getRunCommand(executable, input) {
 }
 
 function getExecutablePath(fileName) {
+  console.log(os.platform());
   if (os.platform() === 'win32') {
     return `${path.join(__dirname, '..', 'junk', fileName)}.exe`;
   }
