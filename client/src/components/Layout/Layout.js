@@ -13,6 +13,7 @@ const LayoutWrapper = styled.div`
   flex-direction: row;
 
   @media (max-width: 600px) {
+    height: 200%;
     flex-direction: column;
   }
 `;
@@ -25,6 +26,8 @@ const IOWrapper = styled.div`
   justify-content: flex-start;
   @media (max-width: 600px) {
     width: 100%;
+    flex-direction: row;
+    justify-content: flex-start;
   }
 `;
 
