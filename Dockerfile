@@ -10,4 +10,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 5555
-CMD ["node","index.js"]
+CMD ["npm","run","start"]
